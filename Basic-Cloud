@@ -1,0 +1,44 @@
+                            BASIC - CLOUD
+
+        1. Cloud Computing là gì?
+            Cloud computing (Điện toán đám mây) là việc cung cấp các dịch vụ máy tính (bao gồm máy chủ, lưu trữ, cơ sở dữ liệu, phần mềm, v.v.) qua Internet ("đám mây"),
+             thay vì các máy chủ hoặc phần cứng vật lý. Các dịch vụ này có thể được truy cập từ bất kỳ đâu, cho phép người dùng lưu trữ, 
+             truy xuất và chia sẻ dữ liệu hoặc chạy các ứng dụng mà không cần phải sở hữu và duy trì cơ sở hạ tầng vật lý.
+            
+            Lợi ích của Cloud Computing:
+
+                Tiết kiệm chi phí: Không cần phải đầu tư vào phần cứng đắt tiền và bảo trì.
+
+                Scalability: Dễ dàng mở rộng hoặc thu hẹp tài nguyên theo nhu cầu.
+
+                Tính linh hoạt: Dịch vụ có thể được sử dụng từ bất kỳ đâu và trên bất kỳ thiết bị nào có kết nối Internet.
+        
+        2. Các mô hình dịch vụ Cloud Computing:
+            - Infrastructure as a Service (IaaS): Cung cấp hạ tầng máy tính như máy chủ, lưu trữ và mạng. Người dùng có thể quản lý hệ điều hành và ứng dụng của mình.
+                vi dụ: Amazon Web Services (AWS), Microsoft Azure, Google Cloud Platform (GCP).
+            - Platform as a Service (PaaS): Cung cấp nền tảng để phát triển, chạy và quản lý ứng dụng mà không cần lo lắng về hạ tầng cơ sở.
+                    ví dụ: Heroku, Google App Engine, Microsoft Azure App Service.
+            - Software as a Service (SaaS): Cung cấp phần mềm qua Internet, người dùng có thể truy cập và sử dụng phần mềm mà không cần cài đặt hoặc quản lý.
+                    ví dụ: Google Workspace (Gmail, Google Drive), Microsoft 365, Salesforce.
+
+        3. Các mô hình triển khai Cloud Computing:
+            - Public Cloud: Dịch vụ được cung cấp bởi bên thứ ba và chia sẻ tài nguyên với nhiều khách hàng khác nhau. Ví dụ: AWS, Azure, GCP.
+            - Private Cloud: Dịch vụ được triển khai riêng cho một tổ chức duy nhất, có thể được quản lý nội bộ hoặc bởi bên thứ ba.
+            - Hybrid Cloud: Kết hợp giữa public cloud và private cloud, cho phép dữ liệu và ứng dụng di chuyển giữa hai môi trường này.
+
+        4. Các dịch vụ của Cloud Provider:
+            - Compute: Cung cấp tài nguyên máy tính để chạy ứng dụng, ví dụ: Amazon EC2, Google Compute Engine.
+            - Storage: Cung cấp dịch vụ lưu trữ dữ liệu, ví dụ: Amazon S3, Google Cloud Storage.
+            - Database: Cung cấp dịch vụ cơ sở dữ liệu quản lý, ví dụ: Amazon RDS, Google Cloud SQL.
+            - Networking: Cung cấp dịch vụ mạng như VPN, load balancing, v.v., ví dụ: Amazon VPC, Google Cloud VPC.
+        
+        5. Bảo mật trong Cloud Computing:
+            - Mã hóa dữ liệu: Dữ liệu được mã hóa khi lưu trữ và
+                truyền tải để bảo vệ khỏi truy cập trái phép.   
+            - Kiểm soát truy cập: Sử dụng các cơ chế xác thực và phân quyền để đảm bảo chỉ những người dùng được phép mới có thể truy cập vào tài nguyên.
+            - Giám sát và ghi log: Theo dõi hoạt động và ghi lại các sự kiện để phát hiện và phản ứng với các mối đe dọa bảo mật.
+            - Tuân thủ quy định: Đảm bảo tuân thủ các tiêu chuẩn và quy
+                định bảo mật như GDPR, HIPAA, v.v. để bảo vệ dữ liệu và quyền riêng tư của người dùng.
+
+        6. 
+        
