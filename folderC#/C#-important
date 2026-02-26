@@ -1,0 +1,528 @@
+1. ASP.NET Core 
+       1.ASP.NET Core là gì và nó khác gì so với ASP.NET cũ?
+
+            ASP.NET Core là một framework phát triển ứng dụng web mã nguồn mở, cross-platform (có thể chạy trên Windows, Linux, macOS). Nó được thiết kế lại từ ASP.NET với mục tiêu cải thiện hiệu suất, khả năng mở rộng và dễ sử dụng. So với ASP.NET cũ, ASP.NET Core có những điểm khác biệt lớn như:
+
+            Cross-platform: ASP.NET Core có thể chạy trên nhiều hệ điều hành, không chỉ Windows.
+
+            Hiệu suất tốt hơn: ASP.NET Core được tối ưu hóa để giảm độ trễ và tăng tốc độ xử lý.
+
+            Không phụ thuộc vào IIS: ASP.NET Core có thể chạy trên bất kỳ web server nào như Kestrel hoặc Nginx.
+
+            Module và middleware: ASP.NET Core sử dụng middleware để xử lý các yêu cầu HTTP thay vì HTTP modules và handlers.
+
+        2. ASP.NET Core có những tính năng nào hỗ trợ phát triển ứng dụng web hiệu quả?
+
+            Dependency Injection (DI) tích hợp sẵn: Giúp quản lý sự phụ thuộc giữa các đối tượng, dễ dàng kiểm thử và bảo trì.
+
+            Middleware pipeline: Cung cấp cách thức để xử lý các yêu cầu HTTP linh hoạt, có thể chèn các middleware giữa các yêu cầu.
+
+            Routing: Hỗ trợ các loại routing mạnh mẽ cho các API RESTful.
+
+            Built-in Authentication & Authorization: Các phương thức xác thực người dùng như Cookie Authentication, JWT Bearer Token, và OAuth2 được tích hợp sẵn.
+
+            Cross-platform support: ASP.NET Core có thể chạy trên Windows, Linux, và macOS.
+        
+        3.Làm thế nào để cấu hình Dependency Injection trong ASP.NET Core?
+
+            Trong ASP.NET Core, bạn chỉ cần cấu hình DI trong lớp Startup.cs bằng cách sử dụng phương thức ConfigureServices:
+
+            public void ConfigureServices(IServiceCollection services)
+            {
+                services.AddSingleton<IMyService, MyService>();  // Singleton
+                services.AddTransient<IRepository, Repository>(); // Transient
+            }
+
+            Sau đó, bạn có thể inject dịch vụ vào các lớp Controller hoặc các lớp khác qua constructor.
+                    
+        4. Middleware là gì và làm thế nào để tạo một middleware tùy chỉnh trong ASP.NET Core?
+            Middleware là một thành phần phần mềm được sử dụng để xử lý các yêu cầu HTTP trong pipeline của ASP.NET Core.
+             Middleware có thể thực hiện các tác vụ như xác thực, logging, hoặc xử lý lỗi trước khi yêu cầu được gửi đến controller.
+
+            Để tạo một middleware tùy chỉnh, bạn có thể tạo một lớp mới và triển khai phương thức Invoke hoặc InvokeAsync:
+
+            public class MyCustomMiddleware
+            {
+                private readonly RequestDelegate _next;
+
+                public MyCustomMiddleware(RequestDelegate next)
+                {
+                    _next = next;
+                }
+
+                public async Task InvokeAsync(HttpContext context)
+                {
+                    // Thực hiện các tác vụ trước khi gọi middleware tiếp theo
+                    await context.Response.WriteAsync("Hello from custom middleware!");
+
+                    // Gọi middleware tiếp theo trong pipeline
+                    await _next(context);
+                }
+            }
+
+            Sau đó, bạn cần đăng ký middleware này trong phương thức Configure của Startup.cs:
+
+            public void Configure(IApplicationBuilder app)
+            {
+                app.UseMiddleware<MyCustomMiddleware>();
+                // Các middleware khác...
+            }
+
+         5.Các phương thức HTTP trong ASP.NET Core là gì và sự khác biệt giữa chúng?
+
+                GET: Lấy dữ liệu từ server, không thay đổi trạng thái của dữ liệu.
+
+                POST: Gửi dữ liệu lên server, thường dùng để tạo mới tài nguyên.
+
+                PUT: Cập nhật toàn bộ tài nguyên đã có.
+
+                PATCH: Cập nhật một phần tài nguyên.
+
+                DELETE: Xóa tài nguyên.
+
+                HEAD: Tương tự GET nhưng không trả về body, chỉ trả về headers.
+
+                OPTIONS: Kiểm tra các phương thức HTTP mà server hỗ trợ.
+        
+        6.Cách cấu hình và sử dụng middleware trong ASP.NET Core?
+
+            Middleware trong ASP.NET Core xử lý các yêu cầu HTTP trong một chuỗi. Để sử dụng middleware, bạn cần đăng ký chúng trong phương thức Configure của Startup.cs.
+
+            public void Configure(IApplicationBuilder app)
+            {
+                app.UseStaticFiles();  // Middleware phục vụ tệp tĩnh
+                app.UseRouting();      // Định tuyến yêu cầu đến các endpoint
+                app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapControllers();  // Chạy controller với các endpoint REST API
+                });
+            }
+
+        7.Cách xử lý lỗi trong ASP.NET Core?
+            ASP.NET Core cung cấp nhiều cách để xử lý lỗi, bao gồm:
+
+            Sử dụng middleware UseExceptionHandler: Middleware này sẽ bắt tất cả các lỗi không được xử lý và chuyển hướng đến một trang lỗi tùy chỉnh.
+
+            public void Configure(IApplicationBuilder app)
+            {
+                app.UseExceptionHandler("/Home/Error");
+                // Các middleware khác...
+            }
+
+            Sử dụng middleware UseStatusCodePages: Middleware này sẽ hiển thị trang lỗi cho các mã trạng thái HTTP như 404 hoặc 500.
+
+            public void Configure(IApplicationBuilder app)
+            {
+                app.UseStatusCodePages();
+                // Các middleware khác...
+            }
+
+            Xử lý lỗi trong controller: Bạn có thể sử dụng try-catch trong các action method của controller để xử lý lỗi cụ thể.
+
+            public IActionResult MyAction()
+            {
+                try
+                {
+                    // Logic xử lý
+                }
+                catch (Exception ex)
+                {
+                    // Xử lý lỗi và trả về phản hồi phù hợp
+                    return StatusCode(500, "Internal server error");
+                }
+            }
+        
+        8. Cách triển khai và sử dụng các phương thức HTTP trong ASP.NET Core?
+
+            Để triển khai các phương thức HTTP trong ASP.NET Core, 
+            bạn cần tạo một controller và sử dụng các attribute tương ứng để đánh dấu các action method.
+
+            public class MyController : ControllerBase
+            {
+                [HttpGet]
+                public IActionResult Get()
+                {
+                    // Logic xử lý GET
+                    return Ok("This is a GET request");
+                }
+
+                [HttpPost]
+                public IActionResult Post([FromBody] MyModel model)
+                {
+                    // Logic xử lý POST
+                    return Ok("This is a POST request");
+                }
+
+                [HttpPut("{id}")]
+                public IActionResult Put(int id, [FromBody] MyModel model)
+                {
+                    // Logic xử lý PUT
+                    return Ok($"This is a PUT request for id {id}");
+                }
+
+                [HttpDelete("{id}")]
+                public IActionResult Delete(int id)
+                {
+                    // Logic xử lý DELETE
+                    return Ok($"This is a DELETE request for id {id}");
+                }
+            }
+
+            Trong ví dụ trên, chúng ta đã triển khai các phương thức HTTP GET, POST, PUT, và DELETE trong một controller.
+             Mỗi action method được đánh dấu bằng attribute tương ứng để xác định loại yêu cầu HTTP mà nó sẽ xử lý.
+
+
+        9. Sự khác biệt giữa ASP.NET Core MVC và ASP.NET Core Web API là gì?
+            ASP.NET Core MVC là một framework để xây dựng các ứng dụng web với kiến trúc Model-View-Controller (MVC). 
+                Nó thường được sử dụng để tạo ra các ứng dụng web có giao diện người dùng (UI) phức tạp.  
+            ASP.NET Core Web API là một framework để xây dựng các dịch vụ web RESTful. 
+                Nó tập trung vào việc cung cấp dữ liệu thông qua các endpoint API mà không cần quan tâm đến giao diện người dùng.
+             Sự khác biệt chính giữa hai framework này là mục đích sử dụng: MVC dành cho các ứng dụng web có giao diện người dùng,
+                 trong khi Web API dành cho các dịch vụ web cung cấp dữ liệu thông qua API. Tuy nhiên, cả hai framework đều có thể được sử dụng cùng nhau trong một ứng dụng ASP.NET Core để cung cấp cả giao diện người dùng và API.         
+
+        
+        10. Sự khác nhau giữa ASP.NET vs ASP.NET Core?
+            ASP.NET là một framework phát triển ứng dụng web do Microsoft phát triển, chỉ chạy trên Windows và yêu cầu .NET Framework.
+            ASP.NET Core là một framework phát triển ứng dụng web mã nguồn mở, cross-platform (có thể chạy trên Windows, Linux, macOS) và được thiết kế lại để cải thiện hiệu suất và khả năng mở rộng.
+             ASP.NET Core có nhiều tính năng mới và cải tiến so với ASP.NET, bao gồm hỗ trợ cross-platform, hiệu suất tốt hơn, và tích hợp sẵn các tính năng như Dependency Injection và Middleware.
+              ASP.NET Core cũng không phụ thuộc vào IIS và có thể chạy trên bất kỳ web server nào như Kestrel hoặc Nginx.            
+        
+                2.REST API
+        1.REST API là gì và tại sao nó quan trọng trong phát triển ứng dụng web?
+            REST API (Representational State Transfer Application Programming Interface) 
+            là một kiến trúc thiết kế cho các dịch vụ web. Nó sử dụng các phương thức HTTP để thực hiện các thao tác CRUD (Create, Read, Update, Delete) trên tài nguyên.
+             REST API quan trọng trong phát triển ứng dụng web vì nó cung cấp một cách tiếp cận đơn giản và hiệu quả để xây dựng các dịch vụ web có thể mở rộng và dễ bảo trì.
+              Nó cũng cho phép các ứng dụng khác nhau giao tiếp với nhau thông qua HTTP, làm cho việc tích hợp giữa các hệ thống trở nên dễ dàng hơn.
+        
+        2.Các nguyên tắc cơ bản của REST API là gì?
+            Client-Server: REST API tách biệt giữa client và server, cho phép chúng phát triển độc lập.
+
+            Stateless: Mỗi yêu cầu từ client đến server phải chứa tất cả thông tin cần thiết để hiểu và xử lý yêu cầu đó. Server không lưu trữ trạng thái của client.
+
+            Cacheable: Các phản hồi từ server có thể được cache để cải thiện hiệu suất.
+
+            Uniform Interface: REST API sử dụng một giao diện đồng nhất, thường là các phương thức HTTP (GET, POST, PUT, DELETE) để thao tác với tài nguyên.
+
+            Layered System: REST API có thể được triển khai theo nhiều lớp khác nhau, giúp tăng tính bảo mật và khả năng mở rộng.
+
+        3.Cách thiết kế một REST API hiệu quả?
+            Xác định tài nguyên: Xác định các tài nguyên mà API sẽ quản lý và đặt tên chúng một cách rõ ràng và nhất quán.
+            Sử dụng các phương thức HTTP đúng cách: Sử dụng GET để lấy dữ liệu, POST để tạo mới, PUT để cập nhật toàn bộ, PATCH để cập nhật một phần, và DELETE để xóa.
+            Trả về mã trạng thái HTTP phù hợp: Sử dụng các mã trạng thái HTTP để phản hồi kết quả của yêu cầu (200 OK, 201 Created, 400 Bad Request, 404 Not Found, v.v.).
+            Sử dụng JSON hoặc XML cho dữ liệu: Sử dụng định dạng dữ liệu phổ biến như JSON hoặc XML để truyền dữ liệu giữa client và server.
+            Cung cấp tài liệu API: Cung cấp tài liệu chi tiết về cách sử dụng   API, bao gồm các endpoint, phương thức HTTP, và ví dụ về yêu cầu và phản hồi.
+            Xử lý lỗi: Cung cấp thông tin lỗi chi tiết và mã trạng thái HTTP phù hợp khi có lỗi xảy ra.
+            Bảo mật API: Sử dụng các phương thức xác thực và ủy quyền để bảo vệ API khỏi các truy cập trái phép.            
+
+        4.Phân biệt giữa REST API và SOAP API?
+
+            REST là kiến trúc kiểu nhẹ, sử dụng HTTP và các phương thức chuẩn (GET, POST, PUT, DELETE). Dữ liệu thường được trả về dưới dạng JSON hoặc XML.
+
+            SOAP là một giao thức (protocol) phức tạp hơn, dựa trên XML để định dạng các thông điệp và có các quy định cụ thể về bảo mật, xác thực và các vấn đề khác.
+            REST thường dễ học và triển khai hơn, trong khi SOAP cung cấp nhiều tính năng hơn nhưng cũng phức tạp hơn.
+
+        5. Các mã trạng thái HTTP (HTTP Status Codes) thường sử dụng trong REST API là gì và khi nào sử dụng chúng?
+
+            200 OK: Yêu cầu thành công.
+
+            201 Created: Tài nguyên mới được tạo thành công (thường dùng với POST).
+
+            400 Bad Request: Yêu cầu không hợp lệ, có lỗi trong dữ liệu gửi lên.
+
+            404 Not Found: Tài nguyên không tìm thấy.
+
+            500 Internal Server Error: Lỗi server.
+
+        
+                         3. SQL Server
+        1.SQL Server là gì và nó có những tính năng nổi bật nào?
+            SQL Server là một hệ quản trị cơ sở dữ liệu quan hệ (RDBMS) do Microsoft phát triển. Nó cung cấp một nền tảng mạnh mẽ để lưu trữ, quản lý và truy vấn dữ liệu. Các tính năng nổi bật của SQL Server bao gồm:
+
+            Hiệu suất cao: SQL Server được tối ưu hóa để xử lý các truy vấn phức tạp và khối lượng lớn dữ liệu một cách nhanh chóng.
+
+            Bảo mật: SQL Server cung cấp nhiều lớp bảo mật, bao gồm xác thực, ủy quyền, mã hóa dữ liệu và kiểm soát truy cập.
+
+            Khả năng mở rộng: SQL Server có thể mở rộng để đáp ứng nhu cầu của các ứng dụng lớn và phức tạp.
+
+            Hỗ trợ đa dạng: SQL Server hỗ trợ nhiều loại dữ liệu khác nhau, bao gồm dữ liệu quan hệ, dữ liệu phi quan hệ, và dữ liệu không cấu trúc.
+
+            Công cụ quản lý: SQL Server Management Studio (SSMS) cung cấp một giao diện đồ họa để quản lý cơ sở dữ liệu dễ dàng.
+
+            Tích hợp với các công nghệ Microsoft khác: SQL Server tích hợp tốt với các sản phẩm khác của Microsoft như Azure, Power BI, và .NET Framework.
+
+        2.Giải thích về khóa chính (Primary Key) và khóa ngoại (Foreign Key) trong SQL Server.
+            Primary Key: Là khóa duy nhất xác định mỗi bản ghi trong bảng. Không thể có giá trị NULL.
+            Foreign Key: Liên kết giữa hai bảng, đảm bảo tính toàn vẹn dữ liệu bằng cách đảm bảo giá trị trong trường khóa ngoại phải có trong khóa chính của bảng khác.
+
+        3. Làm thế nào để thực hiện truy vấn JOIN trong SQL Server và các loại JOIN thường dùng?
+
+            INNER JOIN: Lấy các bản ghi có trong cả hai bảng.
+
+            LEFT JOIN: Lấy tất cả bản ghi từ bảng bên trái, và các bản ghi phù hợp từ bảng bên phải.
+
+            RIGHT JOIN: Lấy tất cả bản ghi từ bảng bên phải, và các bản ghi phù hợp từ bảng bên trái.
+
+            FULL OUTER JOIN: Lấy tất cả bản ghi từ cả hai bảng, bao gồm cả bản ghi không khớp.
+
+        4. Having vs WHERE trong SQL Server?
+
+            WHERE: Được sử dụng để lọc các bản ghi trước khi thực hiện các phép toán nhóm (GROUP BY).
+
+            HAVING: Được sử dụng để lọc các nhóm sau khi đã thực hiện GROUP BY.
+
+        5. Cách tối ưu hóa truy vấn SQL Server để cải thiện hiệu suất?
+            Sử dụng chỉ mục (Indexes) để tăng tốc độ truy vấn.
+
+            Tránh sử dụng SELECT * và chỉ chọn các cột cần thiết.
+
+            Sử dụng JOIN thay vì subqueries khi có thể.
+
+            Sử dụng các hàm tổng hợp (Aggregate functions) một cách hợp lý.
+
+            Kiểm tra và tối ưu hóa kế hoạch thực thi (Execution Plan) của truy vấn.
+
+        6. Cách sử dụng Stored Procedures trong SQL Server và lợi ích của chúng?
+            Stored Procedures là các đoạn mã SQL được lưu trữ trong cơ sở dữ liệu và có thể được gọi từ ứng dụng. Lợi ích của Stored Procedures bao gồm:
+
+            Hiệu suất: Stored Procedures được biên dịch trước, giúp tăng tốc độ thực thi.
+
+            Bảo mật: Có thể kiểm soát quyền truy cập vào Stored Procedures, giúp bảo vệ dữ liệu.
+
+            Tái sử dụng: Có thể sử dụng lại Stored Procedures trong nhiều ứng dụng khác nhau.
+
+            Dễ bảo trì: Thay đổi logic trong Stored Procedures mà không cần thay đổi mã ứng dụng.
+
+        7. Cách thực hiện sao lưu và phục hồi cơ sở dữ liệu trong SQL Server?
+            Sao lưu cơ sở dữ liệu: Sử dụng lệnh BACKUP DATABASE để tạo bản sao lưu của cơ sở dữ liệu.
+
+            BACKUP DATABASE [DatabaseName] TO DISK = 'C:\Backup\DatabaseName.bak'
+
+            Phục hồi cơ sở dữ liệu: Sử dụng lệnh RESTORE DATABASE để phục hồi cơ sở dữ liệu từ bản sao lưu.
+
+            RESTORE DATABASE [DatabaseName] FROM DISK = 'C:\Backup\DatabaseName.bak'
+
+        8. So sánh giữa SQL Server và các hệ quản trị cơ sở dữ liệu khác như MySQL, PostgreSQL?
+
+            SQL Server: Hệ quản trị cơ sở dữ liệu quan hệ do Microsoft phát triển, có hiệu suất cao, bảo mật tốt, và tích hợp tốt với các sản phẩm Microsoft khác.
+
+            MySQL: Hệ quản trị cơ sở dữ liệu mã nguồn mở, phổ biến trong các ứng dụng web, có hiệu suất tốt và dễ sử dụng.
+
+            PostgreSQL: Hệ quản trị cơ sở dữ liệu mã nguồn mở, nổi bật với khả năng mở rộng và hỗ trợ các tính năng tiên tiến như JSON và XML.
+
+            SQL Server thường được sử dụng trong môi trường doanh nghiệp lớn, trong khi MySQL và PostgreSQL thường được sử dụng trong các ứng dụng web nhỏ đến trung bình.
+
+        9. Cách sử dụng các hàm tổng hợp (Aggregate Functions) trong SQL Server?
+
+            Các hàm tổng hợp trong SQL Server bao gồm:
+
+            COUNT(): Đếm số lượng bản ghi.
+
+            SUM(): Tính tổng giá trị của một cột.
+
+            AVG(): Tính giá trị trung bình của một cột.
+
+            MIN(): Tìm giá trị nhỏ nhất trong một cột.
+
+            MAX(): Tìm giá trị lớn nhất trong một cột.
+
+            Ví dụ sử dụng:
+
+            SELECT COUNT(*) FROM Employees;  -- Đếm số lượng nhân viên
+            SELECT SUM(Salary) FROM Employees;  -- Tính tổng lương
+            SELECT AVG(Salary) FROM Employees;  -- Tính lương trung bình
+            SELECT MIN(Salary) FROM Employees;  -- Tìm lương thấp nhất
+            SELECT MAX(Salary) FROM Employees;  -- Tìm lương cao nhất
+
+                    4. Entity Framework (EF) / Entity Framework Core (EF Core)
+        1.Entity Framework là gì và nó có những lợi ích gì trong phát triển ứng dụng?
+            Entity Framework (EF) là một Object-Relational Mapper (ORM) cho phép các 
+           lập trình viên làm việc với cơ sở dữ liệu bằng cách sử dụng các đối tượng .NET thay vì viết SQL thủ công. 
+           Lợi ích của EF bao gồm:           
+            Tăng năng suất: EF giúp giảm thiểu lượng mã cần viết để tương tác với cơ sở dữ liệu.
+
+            Dễ bảo trì: Sử dụng các đối tượng .NET giúp mã dễ đọc và dễ bảo trì hơn.
+
+            Hỗ trợ LINQ: EF cho phép sử dụng LINQ để truy vấn dữ liệu, làm cho mã truy vấn trở nên trực quan hơn.
+
+            Tự động hóa: EF có thể tự động tạo và cập nhật cơ sở dữ liệu dựa trên mô hình đối tượng.
+
+            Hỗ trợ nhiều cơ sở dữ liệu: EF hỗ trợ nhiều loại cơ sở dữ liệu khác nhau thông qua các provider.
+
+        2. Sự khác biệt giữa Entity Framework và Entity Framework Core là gì?
+            Entity Framework (EF) là phiên bản đầu tiên của ORM do Microsoft phát triển, chỉ hỗ trợ .NET Framework và Windows.
+
+            Entity Framework Core (EF Core) là phiên bản mới hơn, được thiết kế lại để hỗ trợ cross-platform (Windows, Linux, macOS) và .NET Core. EF Core có hiệu suất tốt hơn và hỗ trợ nhiều tính năng mới so với EF.
+             
+        3.Entity Framework là gì và các loại Entity Framework (EF) hiện nay?
+            Entity Framework (EF) là một Object-Relational Mapper (ORM) cho phép các lập trình viên làm việc với cơ sở dữ liệu bằng cách sử dụng các đối tượng .NET thay vì viết SQL thủ công. Các loại Entity Framework hiện nay bao gồm:
+
+            Entity Framework 6 (EF6): Phiên bản đầu tiên của EF, chỉ hỗ trợ .NET Framework và Windows.
+
+            Entity Framework Core (EF Core): Phiên bản mới hơn, hỗ trợ cross-platform và .NET Core, với nhiều tính năng mới và hiệu suất tốt hơn.
+
+            Entity Framework Core 5.0: Phiên bản mới nhất của EF Core, cung cấp nhiều cải tiến về hiệu suất và tính năng so với các phiên bản trước đó.
+
+        4. Cách sử dụng Entity Framework để thực hiện các thao tác CRUD (Create, Read, Update, Delete)?
+            Create: Để tạo một bản ghi mới, bạn có thể sử dụng phương thức Add hoặc AddAsync của DbSet.
+
+            var newEntity = new MyEntity { Name = "Example" };
+            context.MyEntities.Add(newEntity);
+            context.SaveChanges();
+
+            Read: Để đọc dữ liệu, bạn có thể sử dụng LINQ để truy vấn DbSet.
+
+            var entities = context.MyEntities.Where(e => e.Name == "Example").ToList();
+
+            Update: Để cập nhật một bản ghi, bạn có thể tìm kiếm bản ghi đó, thay đổi giá trị và sau đó gọi SaveChanges.
+
+            var entity = context.MyEntities.Find(id);
+            if (entity != null)
+            {
+                entity.Name = "Updated Name";
+                context.SaveChanges();
+            }
+
+            Delete: Để xóa một bản ghi, bạn có thể tìm kiếm bản ghi đó và sau đó gọi phương thức Remove.
+
+            var entity = context.MyEntities.Find(id);
+            if (entity != null)
+            {
+                context.MyEntities.Remove(entity);
+                context.SaveChanges();
+            }
+
+        5. Giải thích về Migration trong Entity Framework và cách sử dụng nó.
+            Migration trong Entity Framework là một cách để quản lý và áp dụng các thay đổi đối với cấu trúc cơ sở dữ liệu khi mô hình dữ liệu của bạn thay đổi. Migration giúp bạn tạo ra các tập tin mã nguồn chứa các lệnh SQL để cập nhật cơ sở dữ liệu một cách tự động.
+
+            Để sử dụng Migration, bạn có thể làm theo các bước sau:
+
+            Tạo Migration: Sử dụng lệnh Add-Migration trong Package Manager Console để tạo một migration mới.
+
+            Add-Migration InitialCreate
+
+            Áp dụng Migration: Sử dụng lệnh Update-Database để áp dụng migration vào cơ sở dữ liệu.
+
+            Update-Database
+
+            Khi bạn thực hiện các thay đổi đối với mô hình dữ liệu (thêm, sửa, xóa thuộc tính), bạn chỉ cần tạo một migration mới và áp dụng nó để cập nhật cơ sở dữ liệu mà không cần phải viết SQL thủ công.
+
+        6.Làm thế nào để sử dụng LINQ trong Entity Framework để truy vấn dữ liệu?
+            LINQ (Language Integrated Query) là một phần của .NET Framework cho phép bạn viết các truy vấn dữ liệu một cách trực quan và dễ đọc. Trong Entity Framework, bạn có thể sử dụng LINQ để truy vấn dữ liệu từ DbSet.
+
+            Ví dụ sử dụng LINQ để truy vấn dữ liệu:
+
+            var entities = context.MyEntities
+                                  .Where(e => e.Name.Contains("Example"))
+                                  .OrderBy(e => e.Name)
+                                  .ToList();
+
+            Trong ví dụ trên, chúng ta đang truy vấn các bản ghi từ DbSet MyEntities, lọc các bản ghi có tên chứa "Example", sắp xếp theo tên và trả về kết quả dưới dạng danh sách.
+
+        7. Cách tối ưu hóa hiệu suất khi sử dụng Entity Framework?
+            Sử dụng AsNoTracking() cho các truy vấn chỉ đọc để giảm overhead của việc theo dõi thay đổi.
+
+            Sử dụng Select để chỉ lấy các cột cần thiết thay vì lấy toàn bộ đối tượng.
+
+            Sử dụng Include để tải trước các đối tượng liên quan khi cần thiết, tránh N+1 query problem.
+
+            Kiểm tra và tối ưu hóa kế hoạch thực thi (Execution Plan) của truy vấn.
+
+            Sử dụng Stored Procedures hoặc Raw SQL khi cần thiết để tăng hiệu suất cho các truy vấn phức tạp.
+
+        8. Cách xử lý lỗi khi sử dụng Entity Framework?
+            Sử dụng try-catch để bắt các ngoại lệ có thể xảy ra khi làm việc với Entity Framework, chẳng hạn như DbUpdateException hoặc DbEntityValidationException.    
+
+            try
+            {
+                context.SaveChanges();
+            }
+            catch (DbUpdateException ex)
+            {
+                // Xử lý lỗi cập nhật cơ sở dữ liệu
+                Console.WriteLine("An error occurred while updating the database: " + ex.Message);
+            }
+            catch (DbEntityValidationException ex)
+            {
+                // Xử lý lỗi xác thực thực thể
+                foreach (var validationErrors in ex.EntityValidationErrors)
+                {
+                    foreach (var validationError in validationErrors.ValidationErrors)
+                    {
+                        Console.WriteLine("Property: " + validationError.PropertyName + " Error: " + validationError.ErrorMessage);
+                    }
+                }
+            }
+        
+                 5. Architecture (Layered + Clean Architecture)
+
+        1.Layered Architecture là gì và nó có những lợi ích gì trong phát triển phần mềm?
+            Layered Architecture là một mô hình kiến trúc phần mềm trong đó ứng dụng được chia  thành các lớp (layers) khác nhau, mỗi lớp có một trách nhiệm cụ thể.
+             Các lớp thường bao gồm Presentation Layer, Business Logic Layer, Data Access Layer, và Database Layer. Lợi ích của Layered Architecture bao gồm:  
+            Tăng tính tổ chức: Layered Architecture giúp tổ chức mã nguồn một cách rõ ràng và có cấu trúc, làm cho mã dễ đọc và dễ bảo trì hơn.
+            Tách biệt trách nhiệm: Mỗi lớp có một trách nhiệm cụ thể, giúp giảm sự phụ thuộc giữa các phần của ứng dụng và tăng tính modular.
+            Dễ dàng mở rộng: Layered Architecture cho phép bạn dễ dàng thêm các lớp mới
+                hoặc thay đổi các lớp hiện có mà không ảnh hưởng đến các phần khác của ứng dụng.
+            Hỗ trợ tái sử dụng: Các lớp có thể được tái sử dụng trong các ứng dụng khác nhau, giúp tiết kiệm thời gian và công sức phát triển.
+            Dễ dàng kiểm thử: Layered Architecture cho phép bạn kiểm thử từng lớp một cách
+                độc lập, giúp phát hiện lỗi nhanh chóng và cải thiện chất lượng phần mềm.
+
+        2.Clean Architecture là gì và nó khác gì so với Layered Architecture?
+            Clean Architecture là một mô hình kiến trúc phần mềm được đề xuất bởi Robert C. Martin (Uncle Bob). Nó tập trung vào việc tạo ra một kiến trúc linh hoạt, dễ bảo trì và có thể mở rộng bằng cách tách biệt các phần của ứng dụng thành các vòng tròn (circles) khác nhau. Các vòng tròn này bao gồm Entities, Use Cases, Interface Adapters, và Frameworks & Drivers. Sự khác biệt chính giữa Clean Architecture và Layered Architecture là:
+
+            Clean Architecture tập trung vào việc tách biệt các phần của ứng dụng theo trách nhiệm và mức độ phụ thuộc, trong khi Layered Architecture tập trung vào việc tổ chức mã nguồn thành các lớp.
+
+            Clean Architecture cho phép các phần của ứng dụng phụ thuộc vào nhau một cách linh hoạt hơn, trong khi Layered Architecture thường có sự phụ thuộc chặt chẽ giữa các lớp.
+
+            Clean Architecture nhấn mạnh vào việc giữ cho các phần của ứng dụng độc lập với framework và công nghệ cụ thể, trong khi Layered Architecture có thể bị ràng buộc bởi các công nghệ cụ thể.
+
+        3. Cách thiết kế một ứng dụng theo kiến trúc Layered Architecture?
+            Xác định các lớp: Xác định các lớp cần thiết cho ứng dụng của bạn, chẳng hạn như Presentation Layer, Business Logic Layer, Data Access Layer, và Database Layer.
+
+            Tách biệt trách nhiệm: Đảm bảo rằng mỗi lớp có một trách nhiệm cụ thể và không có sự chồng chéo giữa các lớp.
+
+            Sử dụng giao diện: Sử dụng giao diện để định nghĩa các hợp đồng giữa các lớp, giúp giảm sự phụ thuộc giữa chúng.
+
+            Tối ưu hóa luồng dữ liệu: Thiết kế luồng dữ liệu giữa các lớp một cách hiệu quả để đảm bảo rằng dữ liệu được truyền một cách chính xác và nhanh chóng.
+
+            Kiểm thử từng lớp: Kiểm thử từng lớp một cách độc lập để đảm bảo rằng chúng hoạt động đúng và có thể tích hợp với nhau một cách hiệu quả.
+
+        4. Cách thiết kế một ứng dụng theo kiến trúc Clean Architecture?
+            Xác định các vòng tròn: Xác định các vòng tròn cần thiết cho ứng dụng của bạn, chẳng hạn như Entities, Use Cases, Interface Adapters, và Frameworks & Drivers.
+            Tách biệt trách nhiệm: Đảm bảo rằng mỗi vòng tròn có một trách nhiệm cụ thể và không có sự chồng chéo giữa các vòng tròn.
+            Sử dụng giao diện: Sử dụng giao diện để định nghĩa các hợp đồng giữa
+                các vòng tròn, giúp giảm sự phụ thuộc giữa chúng.
+            Tối ưu hóa luồng dữ liệu: Thiết kế luồng dữ liệu giữa các
+                vòng tròn một cách hiệu quả để đảm bảo rằng dữ liệu được truyền một cách chính xác và nhanh chóng.
+            Kiểm thử từng vòng tròn: Kiểm thử từng vòng tròn một cách độc lập để đảm bảo rằng chúng hoạt động đúng và có thể tích hợp với nhau một cách hiệu quả.
+
+        5. Các lớp trong Clean Architecture là gì và chúng có chức năng gì?
+            Entities: Chứa các đối tượng kinh doanh và logic nghiệp vụ cốt lõi của ứng dụng.
+
+            Use Cases: Chứa các quy trình nghiệp vụ và logic ứng dụng, định nghĩa cách thức hoạt động của ứng dụng.
+
+            Interface Adapters: Chứa các lớp để chuyển đổi dữ liệu giữa các vòng tròn khác nhau, chẳng hạn như Controllers, Presenters, và Gateways.
+
+            Frameworks & Drivers: Chứa các lớp liên quan đến framework và công nghệ cụ thể, chẳng hạn như cơ sở dữ liệu, giao diện người dùng, và các dịch vụ bên ngoài.
+
+        6. Các mô hình Dependency Injection và Inversion of Control trong Clean Architecture là gì?
+            Dependency Injection (DI) là một mô hình thiết kế trong đó các đối tượng được cung cấp các phụ thuộc của chúng từ bên ngoài thay vì tự tạo ra chúng. Inversion of Control (IoC) là một nguyên tắc thiết kế trong đó quyền kiểm soát của các đối tượng được đảo ngược, cho phép các đối tượng phụ thuộc vào nhau một cách linh hoạt hơn.
+
+            Trong Clean Architecture, DI và IoC được sử dụng để giảm sự phụ thuộc giữa các vòng tròn và tăng tính linh hoạt của ứng dụng. Các vòng tròn có thể phụ thuộc vào nhau thông qua giao diện, và các đối tượng có thể được cung cấp các phụ thuộc của chúng thông qua DI, giúp tăng tính modular và dễ bảo trì của ứng dụng.
+
+        7. So sánh giữa Layered Architecture và Clean Architecture trong việc xử lý sự phụ thuộc giữa các phần của ứng dụng?
+            Trong Layered Architecture, các lớp thường có sự phụ thuộc chặt chẽ với nhau, với lớp trên cùng phụ thuộc vào lớp dưới cùng. Điều này có thể dẫn đến sự phụ thuộc mạnh mẽ giữa các lớp và làm cho việc thay đổi một lớp có thể ảnh hưởng đến các lớp khác.
+
+            Trong Clean Architecture, sự phụ thuộc được thiết kế để giảm thiểu và linh hoạt hơn. Các vòng tròn có thể phụ thuộc vào nhau thông qua giao diện, và các đối tượng có thể được cung cấp các phụ thuộc của chúng thông qua Dependency Injection. Điều này giúp tăng tính modular và dễ bảo trì của ứng dụng, vì thay đổi một phần của ứng dụng sẽ không ảnh hưởng đến các phần khác nếu chúng không trực tiếp phụ thuộc vào nhau.
+
+        8. Cách xử lý lỗi và ngoại lệ trong kiến trúc Layered và Clean Architecture?
+            Trong Layered Architecture, lỗi và ngoại lệ thường được xử lý trong lớp Business Logic Layer
+            hoặc Data Access Layer, tùy thuộc vào nơi lỗi xảy ra. Các lớp khác có thể không biết về lỗi cụ thể và chỉ nhận được thông báo lỗi chung.
+            Trong Clean Architecture, lỗi và ngoại lệ thường được xử lý trong vòng tròn Use Cases hoặc Interface Adapters. Các vòng tròn khác có thể không biết về lỗi cụ thể và chỉ nhận được thông báo lỗi chung. Điều này giúp giảm sự phụ thuộc giữa các phần của ứng dụng và tăng tính modular.
+        9. Cách kiểm thử ứng dụng được thiết kế theo kiến trúc Layered và Clean Architecture?
+            Trong Layered Architecture, bạn có thể kiểm thử từng lớp một cách độc lập bằng cách sử dụng các công cụ kiểm thử đơn vị (unit testing) như NUnit hoặc xUnit. Bạn cũng có thể kiểm thử tích hợp (integration testing) để đảm bảo rằng các lớp hoạt động đúng khi kết hợp với nhau.
+
+            Trong Clean Architecture, bạn cũng có thể kiểm thử từng vòng tròn một cách độc lập bằng cách sử dụng các công cụ kiểm thử đơn vị. Bạn có thể kiểm thử các Use Cases để đảm bảo rằng logic nghiệp vụ hoạt động đúng, và kiểm thử các Interface Adapters để đảm bảo rằng dữ liệu được chuyển đổi chính xác giữa các vòng tròn. Kiểm thử tích hợp cũng có thể được thực hiện để đảm bảo rằng các phần của ứng dụng hoạt động đúng khi kết hợp với nhau.
+
+        
+
+             
