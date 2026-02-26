@@ -1,0 +1,226 @@
+                        1️⃣ OOP (Object-Oriented Programming)
+    1.1 Encapsulation
+
+Definition:
+Encapsulation is wrapping data and behavior inside a class and restricting direct access to internal data.
+(truy cập thông qua các phương thức (getter, setter).)
+Example:
+public class BankAccount
+{
+    private decimal _balance;  // hidden field
+
+    public decimal Balance
+    {
+        get { return _balance; }
+        private set { _balance = value; }
+    }
+
+    public void Deposit(decimal amount)
+    {
+        if (amount > 0)
+            Balance += amount;
+    }
+}
+
+    1.2 Inheritance
+
+Definition:
+Inheritance allows a class to inherit properties and methods from another class.
+(lớp con kế thừa từ lớp cha, có thể sử dụng lại code và mở rộng chức năng.)
+Example
+public class Animal
+{
+    public void Eat()
+    {
+        Console.WriteLine("Eating...");
+    }
+}
+
+public class Dog : Animal
+{
+    public void Bark()
+    {
+        Console.WriteLine("Barking...");    
+    }
+}
+
+
+
+    1.3 Polymorphism
+Definition:Polymorphism allows objects to behave differently through method overriding.
+(cho phép các lớp con có thể định nghĩa lại phương thức của lớp cha để có hành vi khác nhau.)
+Example:
+public class Animal
+{
+    public virtual void MakeSound()
+    {
+        Console.WriteLine("Animal sound");
+    }
+}
+
+public class Dog : Animal
+{
+    public override void MakeSound()
+    {
+        Console.WriteLine("Bark");
+    }
+}
+
+    1.4 Abstraction
+Definition: Hide complex implementation details and show only essential features.
+(ẩn đi các chi tiết phức tạp và chỉ hiển thị những tính năng cần thiết.)
+public abstract class Shape
+{
+    public abstract double CalculateArea();
+}
+
+public class Circle : Shape
+{
+    private double _radius;
+
+    public Circle(double radius)
+    {
+        _radius = radius;
+    }
+
+    public override double CalculateArea()
+    {
+        return Math.PI * _radius * _radius;
+    }
+}
+
+1.5 Interfaces
+Definition:An interface defines a contract that classes can implement, specifying methods without providing implementation.
+(giao diện định nghĩa một hợp đồng mà các lớp có thể triển khai, chỉ định các phương thức mà không cung cấp triển khai.)
+Example:
+public interface IShape
+{
+    double CalculateArea();
+}
+public class Rectangle : IShape
+{
+    private double _width;
+    private double _height;
+
+    public Rectangle(double width, double height)
+    {
+        _width = width;
+        _height = height;
+    }
+
+    public double CalculateArea()
+    {
+        return _width * _height;
+    }
+}
+
+
+| **Khái niệm**     | **Định nghĩa**                                                                                     | **Mục đích**                                                                       | **Cách sử dụng**                                                                                            | **Ví dụ**                                                                                                          |
+| ----------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| **Encapsulation** | Là việc gói dữ liệu và hành vi bên trong một lớp và hạn chế truy cập trực tiếp vào dữ liệu nội bộ. | Đảm bảo tính bảo mật và ngăn ngừa truy cập trái phép vào dữ liệu quan trọng.       | Sử dụng các trường private và các phương thức getter/setter để truy cập và thay đổi dữ liệu.                | `BankAccount` ẩn trường `_balance` và chỉ cho phép thay đổi thông qua phương thức `Deposit`.                       |
+| **Inheritance**   | Cho phép một lớp kế thừa các thuộc tính và phương thức từ lớp khác.                                | Tái sử dụng mã nguồn và tạo ra các lớp con mở rộng từ lớp cha.                     | Một lớp con kế thừa lớp cha, có thể sử dụng và mở rộng các thuộc tính và phương thức.                       | Lớp `Dog` kế thừa từ lớp `Animal`, sử dụng phương thức `Eat` từ lớp cha và thêm phương thức `Bark`.                |
+| **Polymorphism**  | Cho phép các đối tượng hành xử khác nhau qua việc ghi đè (override) phương thức.                   | Tạo sự linh hoạt trong việc sử dụng các đối tượng khác nhau theo cách tương tự.    | Ghi đè các phương thức trong lớp con để cung cấp hành vi riêng biệt cho mỗi đối tượng.                      | Lớp `Dog` ghi đè phương thức `MakeSound` của lớp `Animal` để thay đổi hành vi thành "Bark" thay vì "Animal sound". |
+| **Abstraction**   | Ẩn đi các chi tiết triển khai phức tạp và chỉ hiển thị các tính năng cơ bản.                       | Giúp giảm độ phức tạp và tập trung vào các khía cạnh quan trọng của một đối tượng. | Sử dụng lớp trừu tượng hoặc phương thức trừu tượng để định nghĩa các phương thức mà lớp con phải thực hiện. | `Shape` là lớp trừu tượng với phương thức `CalculateArea()`, lớp `Circle` triển khai phương thức tính diện tích.   |
+| **Interfaces**    | Định nghĩa một hợp đồng mà các lớp có thể triển khai, chỉ định các phương thức mà không cung cấp triển khai. | Cho phép các lớp khác nhau có thể tương tác với nhau thông qua một giao diện chung. | Sử dụng từ khóa `interface` để định nghĩa giao diện và `implements` để triển khai giao diện trong các lớp. | `IShape` là một interface với phương thức `CalculateArea()`, lớp `Rectangle` triển khai phương thức này.           |
+
+1. Public 
+Definition: Public members are accessible from anywhere in the code.
+
+2. Private
+Definition: Private members are only accessible within the class they are defined in.
+
+3. Protected
+Definition: Protected members are accessible within the class they are defined in and by derived classes.
+(các thành viên protected có thể được truy cập trong lớp cha và các lớp con kế thừa từ lớp cha đó.)
+
+4. Internal
+Definition: Internal members are accessible only within the same assembly.
+(các thành viên internal chỉ có thể được truy cập trong cùng một assembly, không thể truy cập từ bên ngoài assembly đó.)
+
+5. Protected Internal
+Definition: Protected internal members are accessible within the same assembly and by derived classes.
+(các thành viên protected internal có thể được truy cập trong cùng một assembly và bởi các lớp con kế thừa từ lớp cha đó, ngay cả khi chúng ở assembly khác.)
+
+access modifiers in C#:
+
+Cách sử dụng các mức độ truy cập giúp bảo vệ dữ liệu và xác định phạm vi truy cập cho các thành viên trong lớp (fields, methods, properties, v.v.). Các mức độ truy cập phổ biến trong C# bao gồm public, private, protected, internal, và protected internal.
+
+Public:
+
+Truy cập từ bên ngoài: Có thể truy cập từ bất kỳ đâu trong mã nguồn.
+
+Ví dụ: Các phương thức hoặc thuộc tính công khai có thể được gọi từ bất kỳ lớp nào, ví dụ như phương thức Display() trong lớp BankAccount.
+
+Private:
+
+Truy cập từ bên ngoài: Không thể truy cập từ bên ngoài lớp chứa nó.
+
+Ví dụ: Thuộc tính private như trường _balance trong lớp BankAccount chỉ có thể được truy cập từ bên trong lớp đó.
+
+Protected:
+
+Truy cập từ bên ngoài: Có thể truy cập trong lớp kế thừa (subclass).
+
+Ví dụ: Trường protected trong lớp Animal, như name, có thể truy cập được trong lớp con Dog.
+
+Internal:
+
+Truy cập từ bên ngoài: Chỉ có thể truy cập trong cùng một assembly (dự án hoặc thư viện).
+
+Ví dụ: Nếu bạn khai báo một phương thức là internal, nó chỉ có thể được gọi từ các lớp trong cùng một assembly.
+
+Protected Internal:
+
+Truy cập từ bên ngoài: Có thể truy cập trong cùng một assembly và trong các lớp kế thừa (thậm chí các lớp kế thừa từ các assembly khác).
+
+Ví dụ: Trường protected internal có thể được truy cập trong cùng assembly và trong các lớp kế thừa từ các assembly khác.
+
+Private Protected:
+
+Truy cập từ bên ngoài: Chỉ có thể truy cập trong lớp và các lớp kế thừa từ cùng một assembly.
+
+Ví dụ: Trường private protected có thể được truy cập trong cùng một assembly và trong các lớp kế thừa từ assembly đó.
+
+
+| **Mức độ truy cập**    | **Truy cập trong cùng lớp** | **Truy cập trong lớp kế thừa** | **Truy cập từ bên ngoài lớp** | **Truy cập trong cùng assembly** |
+| ---------------------- | --------------------------- | ------------------------------ | ----------------------------- | -------------------------------- |
+| **public**             | Có                          | Có                             | Có                            | Có                               |
+| **private**            | Có                          | Không                          | Không                         | Không                            |
+| **protected**          | Có                          | Có                             | Không                         | Không                            |
+| **internal**           | Có                          | Có                             | Không                         | Có                               |
+| **protected internal** | Có                          | Có                             | Không                         | Có                               |
+| **private protected**  | Có                          | Có (Chỉ trong cùng assembly)   | Không                         | Có                               |
+
+
+                    2️⃣ SOLID Principles
+    2.1 Single Responsibility Principle (SRP)
+Definition: A class should have only one reason to change, meaning it should have only one responsibility.
+(Giải thích:Lý do thay đổi chỉ nên tập trung vào một khía cạnh trong hệ thống. Khi một lớp có nhiều nhiệm vụ,
+ việc thay đổi yêu cầu sẽ ảnh hưởng đến nhiều phần khác nhau, gây khó khăn trong việc bảo trì và mở rộng mã.
+
+Việc tuân thủ SRP giúp bạn tạo ra các lớp nhỏ, dễ hiểu, và dễ kiểm thử.)
+
+    2.2 Open/Closed Principle (OCP)
+Definition: Software entities (classes, modules, functions, etc.) should be open for extension but closed for modification.
+(Giải thích: Các thực thể phần mềm nên được mở để mở rộng nhưng đóng để sửa đổi. 
+Điều này có nghĩa là bạn nên có khả năng thêm chức năng mới mà không cần thay đổi mã nguồn hiện có, giúp giảm thiểu rủi ro lỗi và tăng tính ổn định của hệ thống.)
+
+    2.3 Liskov Substitution Principle (LSP)
+Definition: Objects of a superclass should be replaceable with objects of a subclass without affecting the correctness of the program.
+(Giải thích: Các đối tượng của lớp cha nên có thể được thay thế bằng các đối tượng của lớp con mà không làm ảnh hưởng đến tính đúng đắn của chương trình.
+ Điều này đảm bảo rằng các lớp con thực sự là một loại của lớp cha và có thể được sử dụng một cách an toàn trong bất kỳ ngữ cảnh nào mà lớp cha được sử dụng.)
+
+    2.4 Interface Segregation Principle (ISP)
+Definition: Clients should not be forced to depend on interfaces they do not use.
+(Giải thích: Các khách hàng không nên bị ép buộc phải phụ thuộc vào các giao diện mà họ không sử dụng.
+ Điều này có nghĩa là bạn nên tạo ra các giao diện nhỏ và cụ thể thay vì một giao diện lớn và chung chung,
+  giúp giảm sự phụ thuộc không cần thiết và tăng tính linh hoạt của hệ thống.)
+
+    2.5 Dependency Inversion Principle (DIP)
+Definition: High-level modules should not depend on low-level modules. Both should depend on abstractions.
+(Giải thích: Các mô-đun cấp cao không nên phụ thuộc vào các mô-đun cấp thấp. 
+Cả hai nên phụ thuộc vào các trừu tượng. Điều này có nghĩa là bạn nên thiết kế hệ thống của mình sao cho các phần quan trọng không bị ràng buộc chặt chẽ với các phần chi tiết,
+ giúp tăng tính linh hoạt và khả năng mở rộng của hệ thống.)
+
+
+            
